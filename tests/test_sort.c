@@ -17,9 +17,11 @@ static void printArray(const char *label, const int a[], int n) {
 }
 
 /* input을 정렬한 결과가 want와 같은지 본다. */
-static void expectSorted(const char *name, int input[], const int want[], int n) {
+static void expectSorted(const char *name,
+                         void (*sort)(int[], int),
+                         int input[], const int want[], int n) {
     checks++;
-    bubbleSort(input, n);
+    sort(input, n);
     if (n > 0 && memcmp(input, want, (size_t)n * sizeof(int)) != 0) {
         failures++;
         printf("FAIL  %s\n", name);
@@ -34,33 +36,43 @@ int main(void) {
     {
         int a[] = {6, 8, 5, 9, 10, 1, 7, 2, 4, 3};
         const int want[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-        expectSorted("섞인 배열", a, want, 10);
+        expectSorted("버블 정렬 - 섞인 배열", bubbleSort, a, want, 10);
     }
     {
         int a[] = {1, 2, 3, 4, 5};
         const int want[] = {1, 2, 3, 4, 5};
-        expectSorted("이미 정렬된 배열", a, want, 5);
+        expectSorted("버블 정렬 - 이미 정렬된 배열", bubbleSort, a, want, 5);
     }
     {
         int a[] = {5, 4, 3, 2, 1};
         const int want[] = {1, 2, 3, 4, 5};
-        expectSorted("역순 배열", a, want, 5);
+        expectSorted("버블 정렬 - 역순 배열", bubbleSort, a, want, 5);
     }
     {
         int a[] = {3, 1, 3, 1, 2};
         const int want[] = {1, 1, 2, 3, 3};
-        expectSorted("중복이 있는 배열", a, want, 5);
+        expectSorted("버블 정렬 - 중복이 있는 배열", bubbleSort, a, want, 5);
     }
     {
         int a[] = {42};
         const int want[] = {42};
-        expectSorted("원소 하나", a, want, 1);
+        expectSorted("버블 정렬 - 원소 하나", bubbleSort, a, want, 1);
     }
     {
         /* n = 0이면 배열을 건드리지 않는다. 초기화해 두어야 경고가 없다. */
         int a[1] = {0};
         const int want[1] = {0};
-        expectSorted("빈 배열", a, want, 0);
+        expectSorted("버블 정렬 - 빈 배열", bubbleSort, a, want, 0);
+    }
+    {
+        int a[] = {6, 8, 5, 9, 10, 1, 7, 2, 4, 3};
+        const int want[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        expectSorted("삽입 정렬", insertionSort, a, want, 10);
+    }
+    {
+        int a[] = {6, 8, 5, 9, 10, 1, 7, 2, 4, 3};
+        const int want[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+        expectSorted("셸 정렬", shellSort, a, want, 10);
     }
 
     printf("\n%d checks, %d failures\n", checks, failures);

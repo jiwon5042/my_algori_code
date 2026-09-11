@@ -18,3 +18,29 @@ void bubbleSort(int a[], int n) {
         }
     }
 }
+
+void insertionSort(int a[], int n) {
+    for (int i = 1; i < n; i++) {
+        int key = a[i];
+        int j = i - 1;
+        while (j >= 0 && a[j] > key) {
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = key;
+    }
+}
+
+void shellSort(int a[], int n) {
+    for (int gap = n / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i++) {
+            int key = a[i];
+            int j = i;
+            while (j >= gap && a[j - gap] > key) {
+                a[j] = a[j - gap];
+                j -= gap;
+            }
+            a[j] = key;
+        }
+    }
+}
