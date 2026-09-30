@@ -14,7 +14,7 @@ CFLAGS ?= -std=c17 -Wall -Wextra -O2
 # `-I`는 아래 패턴 규칙이 대상 파일의 폴더로 붙인다. 여기서 고정하지 않는다.
 DEBUGFLAGS ?= -std=c17 -Wall -Wextra -g -O0
 
-.PHONY: all run run-c run-py test test-c test-py debug clean
+.PHONY: all run run-c run-py experiment test test-c test-py debug clean
 
 all: test
 
@@ -26,6 +26,9 @@ run-c: src/main.out
 run-py:
 	@python3 src/main.py
 
+experiment: src/jiwon_task/algoritask.out
+	@cd src/jiwon_task && ./algoritask.out && python3 plot.py
+
 test: test-c test-py
 
 test-c: tests/test_sort.out
@@ -35,6 +38,16 @@ test-py:
 	@python3 -m unittest discover -s tests -v
 
 debug: src/main.debug.out
+
+src/jiwon_task/algoritask.out: src/jiwon_task/algoritask.c
+	$(CC) $(CFLAGS) -I$(@D) -o $@ $<
+
+# The experiment has its own main, so link it without the other src files.
+src/algoritask.out: src/algoritask.c
+	$(CC) $(CFLAGS) -Isrc -o $@ $<
+
+algoritask.out: algoritask.c
+	$(CC) $(CFLAGS) -I. -o $@ $<
 
 # 파일 하나를 그 자리에서 빌드한다. 같은 폴더의 .c를 함께 링크하므로 헤더에
 # 선언만 있고 구현이 옆 파일에 있어도 된다. 대신 **한 폴더에 main은 하나만** 둔다.

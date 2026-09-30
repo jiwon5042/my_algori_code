@@ -11,7 +11,7 @@ FROM debian:trixie-slim
 # git, less: Codespaces 터미널에서 저장소를 다루려면 컨테이너 안에도 있어야 한다
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-       build-essential gdb python3 git less ca-certificates \
+    build-essential gdb python3 python3-pandas python3-matplotlib git less ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /work
